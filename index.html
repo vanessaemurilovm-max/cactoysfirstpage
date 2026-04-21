@@ -1,183 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cactoys Supreme Dictionary</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cactoys Supreme Dictionary</title>
+    <style>
+        :root {
+            --primary: #00ff88;
+            --bg: #0d0d0d;
+            --card-bg: #161616;
+            --text: #e0ffe0;
+        }
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #0d0d0d;
-    color: #e0ffe0;
-    margin: 0;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            line-height: 1.6;
+        }
 
-header {
-    background: linear-gradient(90deg, #00ff88, #004422);
-    padding: 20px;
-    text-align: center;
-    font-size: 28px;
-    font-weight: bold;
-}
+        header {
+            background: linear-gradient(180deg, #001a0d 0%, var(--bg) 100%);
+            border-bottom: 2px solid var(--primary);
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px var(--primary);
+        }
 
-section {
-    padding: 20px;
-    border-bottom: 1px solid #222;
-}
+        .search-container {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            padding: 20px;
+            z-index: 100;
+        }
 
-h2 {
-    color: #00ff88;
-    border-left: 5px solid #00ff88;
-    padding-left: 10px;
-}
+        #searchBox {
+            width: 90%;
+            max-width: 800px;
+            padding: 15px;
+            margin: 0 auto;
+            display: block;
+            font-size: 18px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: var(--primary);
+            border-radius: 4px;
+            outline: none;
+            transition: 0.3s;
+        }
 
-.word {
-    margin: 10px 0;
-    padding: 10px;
-    background: #111;
-    border-radius: 8px;
-}
+        #searchBox:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
 
-.word strong {
-    color: #00ffaa;
-}
+        #dictionary {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
 
-footer {
-    text-align: center;
-    padding: 15px;
-    background: #111;
-    font-size: 12px;
-}
-</style>
+        .word {
+            margin-bottom: 15px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-left: 4px solid #333;
+            border-radius: 0 8px 8px 0;
+            transition: 0.2s;
+        }
+
+        .word:hover {
+            border-left-color: var(--primary);
+            background: #1d1d1d;
+            transform: translateX(5px);
+        }
+
+        .word strong {
+            color: var(--primary);
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-size: 10px;
+            background: #333;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .highlight {
+            background: rgba(0, 255, 136, 0.3);
+            color: white;
+        }
+
+        .stats {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
-
 <body>
 
-<header>
-🌵 Cactoys Supreme Dictionary ☥
-</header>
+<header>🌵 Cactoys Supreme Dictionary ☥</header>
 
-<section>
-<h2>A</h2>
+<div class="search-container">
+    <input type="text" id="searchBox" placeholder="Acessar banco de dados..." autocomplete="off">
+</div>
 
-<div class="word"><strong>Agnes</strong> — A giant discovered after crossing the portal.</div>
-<div class="word"><strong>Anti-Void</strong> — The opposite dimension of the Void where everything is inverted.</div>
+<div class="stats" id="counter">Carregando arquivos...</div>
 
-</section>
+<div id="dictionary"></div>
 
-<section>
-<h2>B</h2>
+<script>
+// Base de dados expandida com tipos
+const words = [
+    {title: "Agnes", type: "Entidade", desc: "Uma gigante descoberta após cruzar um portal."},
+    {title: "Anti-Void", type: "Dimensão", desc: "Dimensão oposta ao Void. Silêncio absoluto."},
+    {title: "Banbanzinho", type: "Explorador", desc: "O principal explorador do multiverso Cactoys."},
+    {title: "Crossbuck", type: "Entidade", desc: "Entidade ferroviária que persegue alvos a 45 studs/s."},
+    {title: "EMC2 Database", type: "Arquivo", desc: "Arquivo secreto de conhecimento universal."},
+    {title: "OCOM", type: "Sistema", desc: "Official Computer of Mine. O núcleo técnico."},
+    {title: "Seekinho", type: "Entidade", desc: "Observador que manifesta anomalias em loop."},
+    {title: "UKR", type: "Local", desc: "Universal Kristall Rubro. Instalação industrial de processamento."},
+    {title: "Void", type: "Dimensão", desc: "Dimensão quebrada e escura onde a realidade falha."},
+    // ... Adicione os outros aqui mantendo o padrão {title, type, desc}
+];
 
-<div class="word"><strong>Banbanzinho</strong> — The main explorer of Cactoys.</div>
-<div class="word"><strong>EMC2 Database</strong> — A secret archive containing universal knowledge.</div>
+const container = document.getElementById("dictionary");
+const counter = document.getElementById("counter");
 
-</section>
+function render(list, term = ""){
+    container.innerHTML = "";
+    counter.innerText = `${list.length} registros encontrados`;
 
-<section>
-<h2>C</h2>
+    list.forEach(w => {
+        const div = document.createElement("div");
+        div.className = "word";
+        
+        let title = w.title;
+        let desc = w.desc;
 
-<div class="word"><strong>Cactoys</strong> — A universe filled with portals and mysteries.</div>
-<div class="word"><strong>Cactoys Village</strong> — A planet entirely covered by an infinite village.</div>
-<div class="word"><strong>Cosmic Capybara</strong> — A giant capybara that exists in space.</div>
-<div class="word"><strong>Crossbuck</strong> — An entity seen in cameras that chases observers.</div>
+        // Efeito de destaque na busca
+        if(term) {
+            const reg = new RegExp(`(${term})`, "gi");
+            title = title.replace(reg, "<span class='highlight'>$1</span>");
+            desc = desc.replace(reg, "<span class='highlight'>$1</span>");
+        }
 
-</section>
+        div.innerHTML = `
+            <span class="tag">${w.type || 'Registro'}</span>
+            <strong>${title}</strong>
+            <span>${desc}</span>
+        `;
+        container.appendChild(div);
+    });
+}
 
-<section>
-<h2>D</h2>
+// Inicialização
+render(words);
 
-<div class="word"><strong>Dorama Carrot</strong> — A strange character found in the aunt’s room.</div>
+// Logica de busca
+document.getElementById("searchBox").addEventListener("input", function(){
+    const term = this.value.toLowerCase();
+    const filtered = words.filter(w =>
+        w.title.toLowerCase().includes(term) ||
+        w.desc.toLowerCase().includes(term) ||
+        (w.type && w.type.toLowerCase().includes(term))
+    );
+    render(filtered, term);
+});
 
-</section>
-
-<section>
-<h2>E</h2>
-
-<div class="word"><strong>Ep ☥</strong> — A symbolic episode numbering system.</div>
-
-</section>
-
-<section>
-<h2>G</h2>
-
-<div class="word"><strong>Guachonin</strong> — An unknown creature.</div>
-<div class="word"><strong>Light Cat</strong> — A cat seen inside a mysterious light.</div>
-
-</section>
-
-<section>
-<h2>H</h2>
-
-<div class="word"><strong>Hazmat Figures</strong> — People in protective suits linked to experiments.</div>
-
-</section>
-
-<section>
-<h2>I</h2>
-
-<div class="word"><strong>Infinite Street</strong> — A street that seems endless but loops around the planet.</div>
-
-</section>
-
-<section>
-<h2>M</h2>
-
-<div class="word"><strong>Monkey</strong> — A character found in the room.</div>
-
-</section>
-
-<section>
-<h2>P</h2>
-
-<div class="word"><strong>Portal</strong> — A gateway to other worlds.</div>
-<div class="word"><strong>Problems</strong> — A mysterious entity.</div>
-<div class="word"><strong>Chick</strong> — A small creature from the aunt’s room.</div>
-
-</section>
-
-<section>
-<h2>R</h2>
-
-<div class="word"><strong>Fried Fox</strong> — A strange character attempting to steal important structures.</div>
-
-</section>
-
-<section>
-<h2>S</h2>
-
-<div class="word"><strong>Seekinho</strong> — An entity trapped in loops that observes everything.</div>
-<div class="word"><strong>Smurf</strong> — A mysterious blue creature.</div>
-
-</section>
-
-<section>
-<h2>U</h2>
-
-<div class="word"><strong>Unicorn</strong> — A magical toy connected to Agnes.</div>
-
-</section>
-
-<section>
-<h2>V</h2>
-
-<div class="word"><strong>Void</strong> — A dark dimension where reality breaks.</div>
-<div class="word"><strong>V</strong> — An unknown entity.</div>
-
-</section>
-
-<section>
-<h2>Symbols</h2>
-
-<div class="word"><strong>☥</strong> — Represents special episodes.</div>
-<div class="word"><strong>ꙮ</strong> — A secret character symbol.</div>
-<div class="word"><strong>⍰ (N E V E R)</strong> — A forbidden symbol.</div>
-
-</section>
-
-<footer>
-Cactoys Universe © | Created by vannesamurilo or cactoys 🌵
-</footer>
+// Suporte a busca via URL (ex: ?q=Crossbuck)
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.has('q')) {
+    const q = urlParams.get('q');
+    document.getElementById("searchBox").value = q;
+    const filtered = words.filter(w => w.title.toLowerCase().includes(q.toLowerCase()));
+    render(filtered, q);
+}
+</script>
 
 </body>
 </html>
